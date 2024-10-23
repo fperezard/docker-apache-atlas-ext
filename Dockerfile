@@ -56,13 +56,11 @@ RUN patch -b -f < atlas_start.py.patch \
 
 WORKDIR /apache-atlas/conf
 RUN sed -i 's/\${atlas.log.dir}/\/apache-atlas\/logs/g' atlas-log4j.xml \
-    && sed -i 's/\${atlas.log.file}/application.log/g' atlas-log4j.xml
+    && sed -i 's/\${atlas.log.file}/application.log/g' atlas-log4j.xml \
+    && sed -i 's/atlas.rest.address=http:\/\/localhost:21000/atlas.rest.address=http:\/\/0.0.0.0:21000/g' atlas-application.properties
 
 # Exponer el puerto 21000
 EXPOSE 21000
-
-# Modificar atlas-application.properties para escuchar en todas las interfaces
-RUN sed -i 's/atlas.rest.address=http:\/\/localhost:21000/atlas.rest.address=http:\/\/0.0.0.0:21000/g' /apache-atlas/conf/atlas-application.properties
 
 WORKDIR /apache-atlas/bin
 RUN ./atlas_start.py -setup || true
